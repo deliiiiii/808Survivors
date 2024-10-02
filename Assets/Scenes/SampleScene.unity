@@ -217,7 +217,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cfcb7f371130c345886a61253116091, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  maxHealth:
+    baseVal: 100
+  curHealth: 0
   moveSpeed: 0.5
 --- !u!1 &223737337
 GameObject:
@@ -409,8 +411,8 @@ GameObject:
   - component: {fileID: 700680155}
   - component: {fileID: 700680157}
   - component: {fileID: 700680156}
-  - component: {fileID: 700680158}
   - component: {fileID: 700680159}
+  - component: {fileID: 700680160}
   m_Layer: 0
   m_Name: Tile1
   m_TagString: Block
@@ -530,18 +532,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &700680158
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 700680154}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1163f0d3fb4ef934ebc0543a62d98996, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &700680159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -555,6 +545,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   countInGrid: 3
+--- !u!114 &700680160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 700680154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1163f0d3fb4ef934ebc0543a62d98996, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &913333243
 GameObject:
   m_ObjectHideFlags: 0
@@ -933,7 +935,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2094564226656786734, guid: 222c32d70376f1e45be4a58552f39996, type: 3}
-      insertIndex: -1
+      insertIndex: 1
       addedObject: {fileID: 70439037}
   m_SourcePrefab: {fileID: 100100000, guid: 222c32d70376f1e45be4a58552f39996, type: 3}
 --- !u!1001 &2663880968681340578
@@ -1043,6 +1045,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5809055637242643800, guid: 212a3ebe6fee63b47a82dd1557d371c1, type: 3}
       propertyPath: health
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5809055637242643800, guid: 212a3ebe6fee63b47a82dd1557d371c1, type: 3}
+      propertyPath: entityData
+      value: 
+      objectReference: {fileID: 11400000, guid: 854d9db70d4b7154b8226f6dcb9358e8, type: 2}
+    - target: {fileID: 5809055637242643800, guid: 212a3ebe6fee63b47a82dd1557d371c1, type: 3}
+      propertyPath: maxHealth.baseVal
       value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 5809055637242643800, guid: 212a3ebe6fee63b47a82dd1557d371c1, type: 3}

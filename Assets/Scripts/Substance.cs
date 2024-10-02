@@ -1,13 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Substance : MonoBehaviour
+[RequireComponent(typeof(ObjectPool))]
+public class Substance : MonoBehaviour,IResetObject
 {
-    public virtual void Initialize()
-    {
-
-    }
+    public virtual void Initialize(){}
     [SerializeField]
     float destroyDistance;
     public enum DestroyType
@@ -29,13 +26,13 @@ public class Substance : MonoBehaviour
             case DestroyType.OutOfView:
                 if (!IsInView())
                 {
-                    MyDestroy();
+                    GetComponent<ObjectPoolObject>().MyDestroy(gameObject);
                 }
                 break;
             case DestroyType.OutOfDistance:
                 if (!IsInDistance())
                 {
-                    MyDestroy();
+                    GetComponent<ObjectPoolObject>().MyDestroy(gameObject);
                 }
                 break;
         }
@@ -49,9 +46,5 @@ public class Substance : MonoBehaviour
     bool IsInDistance()
     {
         return Vector3.Distance(transform.position, Camera.main.transform.position) < destroyDistance;
-    }
-    void MyDestroy()
-    {
-        GetComponent<ObjectPoolObject>().MyDestroy(gameObject);
     }
 }

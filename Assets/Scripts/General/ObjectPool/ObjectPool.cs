@@ -1,6 +1,11 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
-
+public interface IResetObject
+{
+}
 public class ObjectPool : MonoBehaviour
 {
     GameObject tPrefab;
@@ -61,8 +66,59 @@ public class ObjectPool : MonoBehaviour
             g.transform.parent = fParent;
         else
             g.transform.parent = objectPoolParent;
-        g.gameObject.SetActive(true);
+        // 获取当前游戏对象上实现了IResetObject接口的那个组件
+        if (g.name.Contains("Enemy"))
+        {
+            int c = 0;
+        }
+        Component resetComInG = GetComponentsImplementingInterface(g);
+        //将tPrefab上属于resetObject的类的组件赋给g上的resetObject
+        if (resetComInG != null)
+        {
+            Component[] comps = tPrefab.GetComponents<Component>();
+            foreach (var comInPrefab in comps)
+            {
+                if (comInPrefab.GetType() == resetComInG.GetType())
+                {
+                    //删除g上的组件resetObject
+                    Component oldComp = g.GetComponent(comInPrefab.GetType());
+                    CopyComponentValues(comInPrefab, oldComp);
+
+                    //if (oldComp != null)
+                    //    Destroy(oldComp);
+                    //Component newComp = g.AddComponent(comInPrefab.GetType());
+                    ////将tPrefab上的组件赋给g上的组件
+                    //Type t = resetComInG.GetType();
+                    //MemberInfo[] m = t.GetMembers();
+                    break;
+                }
+            }
+        }
+
+        g.SetActive(true);
         return g;
+    }
+    
+
+    private void CopyComponentValues(Component source, Component destination)
+    {
+        // 获取源组件的类型
+        System.Type type = source.GetType();
+
+        // 获取所有字段并复制
+        var fields = type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        foreach (var field in fields)
+        {
+            field.SetValue(destination, field.GetValue(source));
+        }
+        var properties = type.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        foreach (var property in properties)
+        {
+            if (property.CanWrite) // 确保属性可写
+            {
+                property.SetValue(destination, property.GetValue(source));
+            }
+        }
     }
     public void MyDestroy(GameObject obj)
     {
@@ -87,5 +143,28 @@ public class ObjectPool : MonoBehaviour
             obj.SetActive(false);
             availableObject.Push(obj);
         }
+    }
+    public Component GetComponentsImplementingInterface(GameObject g)
+    {
+        Component[] rets = g.GetComponents<Component>();
+        foreach (var ret in rets)
+        {
+            Type t = ret.GetType();
+            while(t != null)
+            {
+                Type[] interfaces = t.GetInterfaces();
+                foreach (var inter in interfaces)
+                {
+                    if(inter.Name.Contains("Object"))
+                        Debug.Log(inter.Name);
+                    if (inter == typeof(IResetObject))
+                    {
+                        return ret;
+                    }
+                }
+                t = t.BaseType;
+            }
+        }
+        return null;
     }
 }

@@ -14,10 +14,6 @@ public class EnemyManager : Singleton<EnemyManager>
                 continue;
             enemies.Add(transform.GetChild(i).GetComponent<Enemy>());
         }
-        foreach(var enemy in enemies)
-        {
-            enemy.Initialize();
-        }
     }
 
     private void Update()

@@ -1,31 +1,45 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+
 
 public class Entity : MonoBehaviour
 {
     public virtual void Initialize()
     {
-        if(health <= 0)
+        if(maxHealth.Value <= 0)
         {
             Debug.LogError(name + " init HP fail");
         }
+        curHealth = maxHealth.Value;
+    }
+    public virtual void OnEnable()
+    {
+        Initialize();
     }
     #region HP
     [SerializeField]
-    float health;
+    BuffFloat maxHealth;
+    [SerializeField]
+    float curHealth;
     public float Health
     {
         get
         {
-            return health;
+            return curHealth;
         }
         set
         {
-            health = value;
-            if (health <= 0)
+            curHealth = value;
+            if (curHealth > maxHealth.Value)
             {
-                health = 0f;
+                curHealth = maxHealth.Value;
+            }
+            if (curHealth <= 0)
+            {
+                curHealth = 0f;
                 OnHealthZero();
             }
         }

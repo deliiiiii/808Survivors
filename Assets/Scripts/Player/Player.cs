@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Player : Entity
 {
+    public override void Initialize()
+    {
+        base.Initialize();
+    }
     protected override void OnHealthZero()
     {
         Debug.Log("Game over");

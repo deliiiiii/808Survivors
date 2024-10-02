@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
             return player;
         }
     }
-
     private void Awake()
     {
         EnemyManager.Instance.Initialize();
