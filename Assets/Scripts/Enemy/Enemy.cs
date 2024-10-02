@@ -7,13 +7,12 @@ public class Enemy : Entity
     public override void Initialize()
     {
         base.Initialize();
-        GetComponent<ObjectPool>().Initialize();
     }
     float attachDamage = 0.1f;
     protected override void Move()
     {
         // Move towards the player
-        Vector3 direction = (GameManager.Instance.Player.transform.position - transform.position).normalized;
+        Vector3 direction = (GameManager.Player.transform.position - transform.position).normalized;
         transform.position += direction * Time.deltaTime * moveSpeed;
     }
     private void OnCollisionStay2D(Collision2D collision)

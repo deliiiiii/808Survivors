@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : MonoBehaviour
 {
-    Player player;
-    public Player Player
+    static Player player;
+    public static Player Player
     {
         get
         {
@@ -21,5 +21,6 @@ public class GameManager : Singleton<GameManager>
     {
         EnemyManager.Instance.Initialize();
         WeaponManager.Instance.Initialize();
+        MapManager.Instance.Initialize();
     }
 }

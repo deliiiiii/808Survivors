@@ -4,7 +4,7 @@ using UnityEngine;
 public class ObjectPool : MonoBehaviour
 {
     GameObject tPrefab;
-    [HelpBox("设置对象池父物体，不设置则在同级Sible中生成新物体作为父物体",HelpBoxType.Info)]
+    [HelpBox("设置对象池父物体，不设置则在同级Sible中生成新物体作为父物体", HelpBoxType.Info)]
     //[SerializeField]
     Transform objectPoolParent;
     int initCount = 16;
@@ -31,6 +31,8 @@ public class ObjectPool : MonoBehaviour
     }
     void MyCreateNew(int newCount)
     {
+        if (allObject == null)
+            Initialize();
         for (int i = 0; i < newCount; i++)
         {
             GameObject g = Instantiate(tPrefab, Vector3.zero, Quaternion.identity, objectPoolParent);
@@ -47,6 +49,8 @@ public class ObjectPool : MonoBehaviour
     }
     public GameObject MyInstantiate(Vector3 fPos, Quaternion fRot, Transform fParent = null)
     {
+        if (allObject == null)
+            Initialize();
         if (availableObject.Count == 0)
         {
             MyCreateNew((int)(poolCount == 0 ? initCount : poolCount * 0.5f));
@@ -62,6 +66,8 @@ public class ObjectPool : MonoBehaviour
     }
     public void MyDestroy(GameObject obj)
     {
+        if (allObject == null)
+            Initialize();
         if (obj == null)
         {
             Debug.LogError("MyDestroy null " + tPrefab.name + " !");
@@ -69,5 +75,17 @@ public class ObjectPool : MonoBehaviour
         }
         obj.SetActive(false);
         availableObject.Push(obj);
+    }
+    public void MyDestroyAll()
+    {
+        if (allObject == null)
+            Initialize();
+        foreach (var obj in allObject)
+        {
+            if (!obj.activeSelf)
+                continue;
+            obj.SetActive(false);
+            availableObject.Push(obj);
+        }
     }
 }

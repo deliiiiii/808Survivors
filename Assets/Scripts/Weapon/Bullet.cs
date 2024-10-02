@@ -16,15 +16,14 @@ public class Bullet : Substance
         {
             Debug.LogError(name + " init damage fail");
         }
-        GetComponent<ObjectPool>().Initialize();
     }
     public virtual void Fire()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        Vector3 dir = (mousePos - GameManager.Instance.Player.transform.position).normalized;
+        mousePos = new Vector3(mousePos.x, mousePos.y, 0);
+        Vector3 dir = (mousePos - GameManager.Player.transform.position).normalized;
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.position = GameManager.Instance.Player.transform.position;
+        transform.position = GameManager.Player.transform.position;
         transform.rotation = Quaternion.Euler(0, 0, angle);
         GetComponent<Rigidbody2D>().velocity = dir * flySpeed;
     }
@@ -35,7 +34,10 @@ public class Bullet : Substance
             collision.GetComponent<Entity>().TakeDamage(damage);
             GetComponent<ObjectPoolObject>().MyDestroy(gameObject);
         }
-
+        if(collision.gameObject.CompareTag("Block"))
+        {
+            GetComponent<ObjectPoolObject>().MyDestroy(gameObject);
+        }
     }
 
     bool CanDamage(GameObject target)

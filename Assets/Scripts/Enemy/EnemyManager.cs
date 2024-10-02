@@ -24,7 +24,7 @@ public class EnemyManager : Singleton<EnemyManager>
     {
         if(Input.GetKeyDown(KeyCode.Q))
         {
-            Vector3 playerPos = GameManager.Instance.Player.transform.position;
+            Vector3 playerPos = GameManager.Player.transform.position;
             Vector3 randomPos = playerPos + new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), 0);
             enemies[0].GetComponent<ObjectPool>().MyInstantiate(randomPos,Quaternion.identity);
 
