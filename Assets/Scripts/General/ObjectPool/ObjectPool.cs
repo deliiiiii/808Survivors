@@ -13,41 +13,9 @@ public class ObjectPool : MonoBehaviour
     //[SerializeField]
     Transform objectPoolParent;
     int initCount = 16;
-    int poolCount => AllObject.Count;
+    int poolCount => allObject.Count;
     List<GameObject> allObject;
-    List<GameObject> AllObject
-    {
-        get
-        {
-            if (allObject == null)
-            {
-                Initialize();
-            }
-
-            return allObject;
-        }
-        set
-        {
-            allObject = value;
-        }
-    }
     Stack<GameObject> availableObject;
-    public Stack<GameObject> AvailableObject
-    {
-        get
-        {
-            if (availableObject == null)
-            {
-                Initialize();
-            }
-
-            return availableObject;
-        }
-        set
-        {
-            availableObject = value;
-        }
-    }
     public void Initialize()
     {
         allObject = new();
@@ -68,14 +36,16 @@ public class ObjectPool : MonoBehaviour
     }
     void MyCreateNew(int newCount)
     {
+        if (allObject == null)
+            Initialize();
         for (int i = 0; i < newCount; i++)
         {
             GameObject g = Instantiate(tPrefab, Vector3.zero, Quaternion.identity, objectPoolParent);
             g.SetActive(false);
             g.AddComponent<ObjectPoolObject>();
             g.GetComponent<ObjectPoolObject>().pool = this;
-            AllObject.Add(g);
-            AvailableObject.Push(g);
+            allObject.Add(g);
+            availableObject.Push(g);
         }
     }
     public GameObject MyInstantiate()
@@ -84,11 +54,13 @@ public class ObjectPool : MonoBehaviour
     }
     public GameObject MyInstantiate(Vector3 fPos, Quaternion fRot, Transform fParent = null)
     {
-        if (AvailableObject.Count == 0)
+        if (allObject == null)
+            Initialize();
+        if (availableObject.Count == 0)
         {
             MyCreateNew((int)(poolCount == 0 ? initCount : poolCount * 0.5f));
         }
-        GameObject g = AvailableObject.Pop();
+        GameObject g = availableObject.Pop();
         g.transform.SetPositionAndRotation(fPos, fRot);
         if (fParent != null)
             g.transform.parent = fParent;
@@ -150,22 +122,26 @@ public class ObjectPool : MonoBehaviour
     }
     public void MyDestroy(GameObject obj)
     {
+        if (allObject == null)
+            Initialize();
         if (obj == null)
         {
             Debug.LogError("MyDestroy null " + tPrefab.name + " !");
             return;
         }
         obj.SetActive(false);
-        AvailableObject.Push(obj);
+        availableObject.Push(obj);
     }
     public void MyDestroyAll()
     {
-        foreach (var obj in AllObject)
+        if (allObject == null)
+            Initialize();
+        foreach (var obj in allObject)
         {
             if (!obj.activeSelf)
                 continue;
             obj.SetActive(false);
-            AvailableObject.Push(obj);
+            availableObject.Push(obj);
         }
     }
     public Component GetComponentsImplementingInterface(GameObject g)
