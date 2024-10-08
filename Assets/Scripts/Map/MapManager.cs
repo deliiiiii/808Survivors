@@ -40,7 +40,7 @@ public class MapManager : Singleton<MapManager>
             {
                 Vector2Int gridIndex = new (i, j);
                 if (generatedTiles.Contains(gridIndex))
-                continue;
+                    continue;
                 generatedTiles.Add(gridIndex);
                 foreach(var tile in mapTiles)
                 {

@@ -2,6 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "PlayerData", menuName = "ScriptableObjects/PlayerData")]
+
+public class PlayerData:EntityData
+{
+    public override void InitializeData()
+    {
+        base.InitializeData();
+    }
+
+}
 public class Player : Entity
 {
     public override void Initialize()
@@ -18,7 +28,7 @@ public class Player : Entity
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         Vector3 movement = new Vector3(horizontal, vertical, 0f);
-        transform.position += movement * Time.deltaTime * moveSpeed;
+        transform.position += movement * Time.deltaTime * entityData.moveSpeed;
     }
     [SerializeField]
     List<Weapon> weapons = new();

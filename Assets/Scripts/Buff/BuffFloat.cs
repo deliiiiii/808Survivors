@@ -9,7 +9,9 @@ public class BuffFloat
 {
     [SerializeField]
     float baseVal;
+    [SerializeField]
     List<float> baseAddVals;
+    [SerializeField]
     List<float> baseMulVals;
     //List<T> finalAddVals = new();
     //List<T> finalMulVals = new();

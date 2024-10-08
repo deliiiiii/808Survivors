@@ -9,13 +9,44 @@ public interface IResetObject
 public class ObjectPool : MonoBehaviour
 {
     GameObject tPrefab;
-    [HelpBox("设置对象池父物体，不设置则在同级Sible中生成新物体作为父物体", HelpBoxType.Info)]
-    //[SerializeField]
+    //[HelpBox("对象池父物体,在同级Sible中生成新物体作为父物体", HelpBoxType.Info)]
     Transform objectPoolParent;
     int initCount = 16;
-    int poolCount => allObject.Count;
+    int poolCount => AllObject.Count;
     List<GameObject> allObject;
+    List<GameObject> AllObject
+    {
+        get
+        {
+            if (allObject == null)
+            {
+                Initialize();
+            }
+
+            return allObject;
+        }
+        set
+        {
+            allObject = value;
+        }
+    }
     Stack<GameObject> availableObject;
+    public Stack<GameObject> AvailableObject
+    {
+        get
+        {
+            if (availableObject == null)
+            {
+                Initialize();
+            }
+
+            return availableObject;
+        }
+        set
+        {
+            availableObject = value;
+        }
+    }
     public void Initialize()
     {
         allObject = new();
@@ -36,16 +67,14 @@ public class ObjectPool : MonoBehaviour
     }
     void MyCreateNew(int newCount)
     {
-        if (allObject == null)
-            Initialize();
         for (int i = 0; i < newCount; i++)
         {
             GameObject g = Instantiate(tPrefab, Vector3.zero, Quaternion.identity, objectPoolParent);
             g.SetActive(false);
             g.AddComponent<ObjectPoolObject>();
             g.GetComponent<ObjectPoolObject>().pool = this;
-            allObject.Add(g);
-            availableObject.Push(g);
+            AllObject.Add(g);
+            AvailableObject.Push(g);
         }
     }
     public GameObject MyInstantiate()
@@ -54,117 +83,38 @@ public class ObjectPool : MonoBehaviour
     }
     public GameObject MyInstantiate(Vector3 fPos, Quaternion fRot, Transform fParent = null)
     {
-        if (allObject == null)
-            Initialize();
-        if (availableObject.Count == 0)
+        if (AvailableObject.Count == 0)
         {
             MyCreateNew((int)(poolCount == 0 ? initCount : poolCount * 0.5f));
         }
-        GameObject g = availableObject.Pop();
+        GameObject g = AvailableObject.Pop();
         g.transform.SetPositionAndRotation(fPos, fRot);
         if (fParent != null)
             g.transform.parent = fParent;
         else
             g.transform.parent = objectPoolParent;
-        // 获取当前游戏对象上实现了IResetObject接口的那个组件
-        if (g.name.Contains("Enemy"))
-        {
-            int c = 0;
-        }
-        Component resetComInG = GetComponentsImplementingInterface(g);
-        //将tPrefab上属于resetObject的类的组件赋给g上的resetObject
-        if (resetComInG != null)
-        {
-            Component[] comps = tPrefab.GetComponents<Component>();
-            foreach (var comInPrefab in comps)
-            {
-                if (comInPrefab.GetType() == resetComInG.GetType())
-                {
-                    //删除g上的组件resetObject
-                    Component oldComp = g.GetComponent(comInPrefab.GetType());
-                    CopyComponentValues(comInPrefab, oldComp);
-
-                    //if (oldComp != null)
-                    //    Destroy(oldComp);
-                    //Component newComp = g.AddComponent(comInPrefab.GetType());
-                    ////将tPrefab上的组件赋给g上的组件
-                    //Type t = resetComInG.GetType();
-                    //MemberInfo[] m = t.GetMembers();
-                    break;
-                }
-            }
-        }
 
         g.SetActive(true);
         return g;
     }
-    
-
-    private void CopyComponentValues(Component source, Component destination)
-    {
-        // 获取源组件的类型
-        System.Type type = source.GetType();
-
-        // 获取所有字段并复制
-        var fields = type.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        foreach (var field in fields)
-        {
-            field.SetValue(destination, field.GetValue(source));
-        }
-        var properties = type.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        foreach (var property in properties)
-        {
-            if (property.CanWrite) // 确保属性可写
-            {
-                property.SetValue(destination, property.GetValue(source));
-            }
-        }
-    }
     public void MyDestroy(GameObject obj)
     {
-        if (allObject == null)
-            Initialize();
         if (obj == null)
         {
             Debug.LogError("MyDestroy null " + tPrefab.name + " !");
             return;
         }
         obj.SetActive(false);
-        availableObject.Push(obj);
+        AvailableObject.Push(obj);
     }
     public void MyDestroyAll()
     {
-        if (allObject == null)
-            Initialize();
-        foreach (var obj in allObject)
+        foreach (var obj in AllObject)
         {
             if (!obj.activeSelf)
                 continue;
             obj.SetActive(false);
-            availableObject.Push(obj);
+            AvailableObject.Push(obj);
         }
-    }
-    public Component GetComponentsImplementingInterface(GameObject g)
-    {
-        Component[] rets = g.GetComponents<Component>();
-        foreach (var ret in rets)
-        {
-            Type t = ret.GetType();
-            while(t != null)
-            {
-                Type[] interfaces = t.GetInterfaces();
-                foreach (var inter in interfaces)
-                {
-                    if(inter.Name.Contains("Object"))
-                        Debug.Log(inter.Name);
-                    if (inter == typeof(IResetObject))
-                    {
-                        return ret;
-                    }
-                }
-                t = t.BaseType;
-            }
-        }
-        return null;
     }
 }

@@ -3,28 +3,41 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
-
-public class Entity : MonoBehaviour
+[CreateAssetMenu(fileName = "EntityData", menuName = "ScriptableObjects/EntityData")]
+[Serializable]
+public class EntityData : ScriptableObject
 {
+    public float maxHealth;
+    public float moveSpeed;
+    public virtual void InitializeData()
+    {
+        if (maxHealth <= 0)
+        {
+            Debug.LogError(GetType().Name + " init HP fail");
+        }
+    }
+}
+
+
+public abstract class Entity : MonoBehaviour
+{
+    [SerializeReference]
+    protected EntityData entityData;
+    
+    public BuffFloat maxHealthBuff;
     public virtual void Initialize()
     {
-        if(maxHealth.Value <= 0)
-        {
-            Debug.LogError(name + " init HP fail");
-        }
-        curHealth = maxHealth.Value;
+        entityData.InitializeData();
+        curHealth = entityData.maxHealth;
+        maxHealthBuff = new(entityData.maxHealth);
     }
     public virtual void OnEnable()
     {
         Initialize();
     }
-    #region HP
-    [SerializeField]
-    BuffFloat maxHealth;
-    [SerializeField]
+    public float MaxHealth => maxHealthBuff.Value;
     float curHealth;
-    public float Health
+    public float CurHealth
     {
         get
         {
@@ -32,16 +45,17 @@ public class Entity : MonoBehaviour
         }
         set
         {
-            curHealth = value;
-            if (curHealth > maxHealth.Value)
+            if (value > MaxHealth)
             {
-                curHealth = maxHealth.Value;
+                curHealth = MaxHealth;
             }
-            if (curHealth <= 0)
+            else if (value <= 0)
             {
                 curHealth = 0f;
                 OnHealthZero();
             }
+            else
+                curHealth = value;
         }
     }
     protected virtual void OnHealthZero()
@@ -50,12 +64,11 @@ public class Entity : MonoBehaviour
     }
     public void TakeDamage(float damage)
     {
-        Health -= damage;
+        CurHealth -= damage;
     }
-    #endregion
+
     #region Move
-    [SerializeField]
-    protected float moveSpeed;
+    
     protected virtual void Move()
     {
 

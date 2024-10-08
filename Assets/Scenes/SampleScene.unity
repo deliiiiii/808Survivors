@@ -217,10 +217,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cfcb7f371130c345886a61253116091, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth:
-    baseVal: 100
-  curHealth: 0
-  moveSpeed: 0.5
+  entityData: {fileID: 11400000, guid: 447c61f6cc198ea408c3076a032b97dd, type: 2}
+  maxHealthBuff:
+    baseVal: 0
+    baseAddVals: []
+    baseMulVals: []
 --- !u!1 &223737337
 GameObject:
   m_ObjectHideFlags: 0
@@ -874,6 +875,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   global: 0
+  enemies: []
+  datas: []
 --- !u!1001 &601321886557153426
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1050,7 +1053,7 @@ PrefabInstance:
     - target: {fileID: 5809055637242643800, guid: 212a3ebe6fee63b47a82dd1557d371c1, type: 3}
       propertyPath: entityData
       value: 
-      objectReference: {fileID: 11400000, guid: 854d9db70d4b7154b8226f6dcb9358e8, type: 2}
+      objectReference: {fileID: 11400000, guid: 87baf162650a5a44d8d592dfa75a2958, type: 2}
     - target: {fileID: 5809055637242643800, guid: 212a3ebe6fee63b47a82dd1557d371c1, type: 3}
       propertyPath: maxHealth.baseVal
       value: 1000
@@ -1061,6 +1064,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5809055637242643800, guid: 212a3ebe6fee63b47a82dd1557d371c1, type: 3}
       propertyPath: weapons.Array.data[0]
+      value: 
+      objectReference: {fileID: 1713808405}
+    - target: {fileID: 5809055637242643800, guid: 212a3ebe6fee63b47a82dd1557d371c1, type: 3}
+      propertyPath: weapons.Array.data[1]
       value: 
       objectReference: {fileID: 1713808405}
     - target: {fileID: 8492146814690489739, guid: 212a3ebe6fee63b47a82dd1557d371c1, type: 3}
