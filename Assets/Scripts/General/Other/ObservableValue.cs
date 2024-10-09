@@ -21,7 +21,15 @@ public class ObservableValue<T>
             if (this.m_value != null && this.m_value.Equals(value))
                 return;
             this.m_value = value;
-            OnValueChangeEvent?.Invoke(oldValue, value);
+            CallChangeEvent(oldValue, value);
         }
+    }
+    public void CallChangeEvent_OnlyNew()
+    {
+        CallChangeEvent(m_value, m_value);
+    }
+    void CallChangeEvent(T oldV,T newV)
+    {
+        OnValueChangeEvent?.Invoke(oldV, newV);
     }
 }

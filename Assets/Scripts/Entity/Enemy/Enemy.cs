@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 [CreateAssetMenu(fileName = "EnemyData", menuName = "ScriptableObjects/EnemyData")]
-[Serializable] 
+[Serializable]
 public class EnemyData : EntityData
 {
     public float attachDamage = 0.1f;
@@ -21,6 +21,7 @@ public class EnemyData : EntityData
 [RequireComponent(typeof(ObjectPool))]
 public class Enemy : Entity, IResetObject
 {
+    EnemyData enemyData => entityData as EnemyData;
     public override void Initialize()
     {
         base.Initialize();
@@ -34,7 +35,7 @@ public class Enemy : Entity, IResetObject
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<Entity>().TakeDamage(((EnemyData)entityData).attachDamage);
+            collision.gameObject.GetComponent<Entity>().TakeDamage(enemyData.attachDamage);
         }
     }
 }

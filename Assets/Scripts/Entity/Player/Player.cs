@@ -10,15 +10,15 @@ public class PlayerData:EntityData
     {
         base.InitializeData();
     }
-
 }
 public class Player : Entity
 {
+    PlayerData playerData => entityData as PlayerData;
     public override void Initialize()
     {
         base.Initialize();
     }
-    protected override void OnHealthZero()
+    public override void OnHealthZero()
     {
         Debug.Log("Game over");
         UnityEditor.EditorApplication.isPaused = true;
@@ -27,8 +27,8 @@ public class Player : Entity
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        Vector3 movement = new Vector3(horizontal, vertical, 0f);
-        transform.position += movement * Time.deltaTime * entityData.moveSpeed;
+        Vector3 movement = new (horizontal, vertical, 0f);
+        transform.position += entityData.moveSpeed * Time.deltaTime * movement;
     }
     [SerializeField]
     List<Weapon> weapons = new();

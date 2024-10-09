@@ -18,8 +18,10 @@ public class GameManager : MonoBehaviour
     }
     private void Awake()
     {
+        GameSetting.Instance.Initialize();
         EnemyManager.Instance.Initialize();
         WeaponManager.Instance.Initialize();
         MapManager.Instance.Initialize();
+        
     }
 }

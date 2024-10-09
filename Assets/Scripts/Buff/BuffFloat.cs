@@ -35,7 +35,7 @@ public class BuffFloat
             float baseMul = 1f;
             foreach (var baseMulVal in baseMulVals)
             {
-                baseMul *= baseMulVal;
+                baseMul += baseMulVal;
             }
             ret *= baseMul;
             return ret;

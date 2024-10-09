@@ -1,11 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "WeaponData", menuName = "ScriptableObjects/WeaponData")]
+[Serializable]
+public class WeaponData : SubstanceData
+{
+    public float fireCoolDown;
+}
 public class Weapon : Substance
 {
-    [SerializeField]
-    float fireCoolDown;
+    WeaponData weaponData => substanceData as WeaponData;
     [SerializeField]
     float lastFireTime;
     Bullet bullet;
@@ -37,7 +43,7 @@ public class Weapon : Substance
     }
     public virtual void TryFire()
     {
-        if (Time.time - lastFireTime > fireCoolDown)
+        if (Time.time - lastFireTime > weaponData.fireCoolDown)
         {
             Fire();
         }

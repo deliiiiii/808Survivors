@@ -1,35 +1,44 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[RequireComponent(typeof(ObjectPool))]
-public class Substance : MonoBehaviour,IResetObject
+[CreateAssetMenu(fileName = "SubstanceData", menuName = "ScriptableObjects/SubstanceData")]
+[Serializable]
+public class SubstanceData:ScriptableObject
 {
-    public virtual void Initialize(){}
-    [SerializeField]
-    float destroyDistance;
     public enum DestroyType
     {
         Never,
         OutOfView,
         OutOfDistance,
     };
+    public DestroyType destroyType = DestroyType.Never;
+    public float destroyDistance;
+}
+
+[RequireComponent(typeof(ObjectPool))]
+public class Substance : MonoBehaviour
+{
+    public SubstanceData substanceData;
+    public virtual void Initialize(){}
+    
     [SerializeField]
-    DestroyType destroyType = DestroyType.Never;
+    
     protected virtual void Update()
     {
         TryDestroy();
     }
     void TryDestroy()
     {
-        switch (destroyType)
+        switch (substanceData.destroyType)
         {
-            case DestroyType.OutOfView:
+            case SubstanceData.DestroyType.OutOfView:
                 if (!IsInView())
                 {
                     GetComponent<ObjectPoolObject>().MyDestroy(gameObject);
                 }
                 break;
-            case DestroyType.OutOfDistance:
+            case SubstanceData.DestroyType.OutOfDistance:
                 if (!IsInDistance())
                 {
                     GetComponent<ObjectPoolObject>().MyDestroy(gameObject);
@@ -45,6 +54,6 @@ public class Substance : MonoBehaviour,IResetObject
     }
     bool IsInDistance()
     {
-        return Vector3.Distance(transform.position, Camera.main.transform.position) < destroyDistance;
+        return Vector3.Distance(transform.position, Camera.main.transform.position) < substanceData.destroyDistance;
     }
 }

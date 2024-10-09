@@ -1,18 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[CreateAssetMenu(fileName = "BulletData", menuName = "ScriptableObjects/BulletData")]
+[Serializable]
+public class BulletData : SubstanceData
+{
+    public float flySpeed = 10f;
+    public float damage;
+}
 public class Bullet : Substance
 {
+    BulletData bulletData => substanceData as BulletData;
     Weapon weapon;
-    [SerializeField]
-    float flySpeed = 10f;
-    [SerializeField]
-    float damage;
+    
     public void Initialize(Weapon f_weapon)
     {
         weapon = f_weapon;
-        if(damage <= 0)
+        if(bulletData.damage <= 0)
         {
             Debug.LogError(name + " init damage fail");
         }
@@ -25,13 +30,13 @@ public class Bullet : Substance
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.position = GameManager.Player.transform.position;
         transform.rotation = Quaternion.Euler(0, 0, angle);
-        GetComponent<Rigidbody2D>().velocity = dir * flySpeed;
+        GetComponent<Rigidbody2D>().velocity = dir * bulletData.flySpeed;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (CanDamage(collision.gameObject))
         {
-            collision.GetComponent<Entity>().TakeDamage(damage);
+            collision.GetComponent<Entity>().TakeDamage(bulletData.damage);
             GetComponent<ObjectPoolObject>().MyDestroy(gameObject);
         }
         if(collision.gameObject.CompareTag("Block"))

@@ -32,11 +32,11 @@ public class MapManager : Singleton<MapManager>
     }
     public void TryGenerateTile()
     {
-        //在周围3x3的网格中生成地图块
+        //在周围5x5的网格中生成地图块
         Vector2Int playerGridIndex = GetPlayerGridIndex();
-        for (int i = playerGridIndex.x - 1; i <= playerGridIndex.x + 1; i++)
+        for (int i = playerGridIndex.x - 2; i <= playerGridIndex.x + 2; i++)
         {
-            for (int j = playerGridIndex.y - 1; j <= playerGridIndex.y + 1; j++)
+            for (int j = playerGridIndex.y - 2; j <= playerGridIndex.y + 2; j++)
             {
                 Vector2Int gridIndex = new (i, j);
                 if (generatedTiles.Contains(gridIndex))

@@ -99,7 +99,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc4a1468fd268342a46fb94417681bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
+  entityData: {fileID: 11400000, guid: 87baf162650a5a44d8d592dfa75a2958, type: 2}
+  maxHealthBuff:
+    baseVal: 0
+    baseAddVals: []
+    baseMulVals: []
+  curHealthRecoverBuff:
+    baseVal: 0
+    baseAddVals: []
+    baseMulVals: []
+  curHealth: 0
+  healthBarPrefab: {fileID: 0}
+  weapons:
+  - {fileID: 0}
 --- !u!61 &2592360589377451248
 BoxCollider2D:
   m_ObjectHideFlags: 0
