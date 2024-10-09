@@ -3,15 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "WeaponData", menuName = "ScriptableObjects/WeaponData")]
+//[CreateAssetMenu(fileName = "WeaponData", menuName = "ScriptableObjects/WeaponData")]
 [Serializable]
 public class WeaponData : SubstanceData
 {
     public float fireCoolDown;
+    public bool hasBullet;
+    public float weaponDamage;
 }
 public class Weapon : Substance
 {
-    WeaponData weaponData => substanceData as WeaponData;
+    protected WeaponData weaponData => substanceData as WeaponData;
     [SerializeField]
     float lastFireTime;
     Bullet bullet;
@@ -21,7 +23,7 @@ public class Weapon : Substance
         {
             if(bullet == null)
             {
-                if(!transform.Find("Bullet"))
+                if(!transform.Find("Bullet") && weaponData.hasBullet)
                 {
                     Debug.LogError(name + " has No Bullet");
                     return null;
@@ -39,21 +41,35 @@ public class Weapon : Substance
 
     public override void Initialize()
     {
-        Bullet.Initialize(this);
+        base.Initialize();
+        if(weaponData.hasBullet)
+            Bullet.Initialize(this);
     }
-    public virtual void TryFire()
+    #region Fire
+    public void TryFire()
     {
         if (Time.time - lastFireTime > weaponData.fireCoolDown)
         {
             Fire();
         }
     }
-    public virtual void Fire()
+    public void Fire()
     {
         lastFireTime = Time.time;
+        if (weaponData.hasBullet)
+            BulletFire();
+        else
+            WeaponFire();
+    }
+    
+    public virtual void BulletFire()
+    {
         GameObject g = Bullet.GetComponent<ObjectPool>().MyInstantiate();
         g.GetComponent<Bullet>().Fire();
     }
-
-    
+    public virtual void WeaponFire()
+    {
+        
+    }
+    #endregion
 }

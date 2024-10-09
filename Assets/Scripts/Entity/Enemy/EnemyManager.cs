@@ -1,4 +1,5 @@
 using Services;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -8,8 +9,11 @@ public class EnemyManager : Singleton<EnemyManager>
 {
     [SerializeField,SerializeReference]
     List<Enemy> enemies = new();
-    [SerializeReference]public List<EntityData> datas = new();
-    
+    //返回值为Enemy的委托
+    public delegate Enemy CollectEnemyDele(Predicate<Enemy> predicate);
+    public event CollectEnemyDele CollectEnemyEvent;
+    //[SerializeReference]public List<EntityData> datas = new();
+
     public void Initialize()
     {
         enemies.Clear();
@@ -28,7 +32,7 @@ public class EnemyManager : Singleton<EnemyManager>
         if(Input.GetKeyDown(KeyCode.Q))
         {
             Vector3 playerPos = GameManager.Player.transform.position;
-            Vector3 randomPos = playerPos + new Vector3(Random.Range(-5, 5), Random.Range(-5, 5), 0);
+            Vector3 randomPos = playerPos + new Vector3(UnityEngine.Random.Range(-5, 5), UnityEngine.Random.Range(-5, 5), 0);
             enemies[0].GetComponent<ObjectPool>().MyInstantiate(randomPos,Quaternion.identity);
 
         }
@@ -51,5 +55,20 @@ public class EnemyManager : Singleton<EnemyManager>
         //    var data = (EnemyData)datas[1];
         //    Debug.Log(data.attachDamage);
         //}
+    }
+
+    //将函数参数设置为筛选条件
+    public List<Enemy> GetCurEnemies(Predicate<Enemy> predicate)
+    {
+        List<Enemy> curEnemies = new();
+        if (CollectEnemyEvent == null)
+            return curEnemies;
+        foreach(CollectEnemyDele it in CollectEnemyEvent.GetInvocationList())
+        {
+            Enemy enemy = it(predicate);
+            if (enemy != null)
+                curEnemies.Add(enemy);
+        }
+        return curEnemies;
     }
 }

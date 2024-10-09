@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-[CreateAssetMenu(fileName = "EntityData", menuName = "ScriptableObjects/EntityData")]
+//[CreateAssetMenu(fileName = "EntityData", menuName = "ScriptableObjects/EntityData")]
 [Serializable]
 public class EntityData : ScriptableObject
 {
@@ -24,6 +24,7 @@ public abstract class Entity : MonoBehaviour
 {
     [SerializeReference]
     protected EntityData entityData;
+    
     #region HP
     public BuffFloat maxHealthBuff;
     public BuffFloat curHealthRecoverBuff;//每秒回复生命
@@ -61,15 +62,12 @@ public abstract class Entity : MonoBehaviour
     {
         healthBar.value = CurHealth / MaxHealth;
         Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
-        // 将屏幕坐标转换为 Canvas 中的坐标
         Vector2 canvasPos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             healthBar.transform.parent.GetComponent<RectTransform>(),
             screenPos,
             Camera.main,
             out canvasPos);
-
-        // 设置血条的位置
         healthBar.transform.localPosition = canvasPos + new Vector2(0, -35);
     }
     void RefreshHealthBar(bool newV)

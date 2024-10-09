@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
-[CreateAssetMenu(fileName = "EnemyData", menuName = "ScriptableObjects/EnemyData")]
+//[CreateAssetMenu(fileName = "EnemyData", menuName = "ScriptableObjects/EnemyData")]
 [Serializable]
 public class EnemyData : EntityData
 {
@@ -21,10 +21,33 @@ public class EnemyData : EntityData
 [RequireComponent(typeof(ObjectPool))]
 public class Enemy : Entity, IResetObject
 {
-    EnemyData enemyData => entityData as EnemyData;
+    public EnemyData enemyData => entityData as EnemyData;
+    #region Collect Enemy
+
+    public Enemy CollectEntity(Predicate<Enemy> predicate)
+    {
+        if (predicate(this))
+        {
+            return this;
+        }
+        return null;
+    }
+    public bool IsInScreen => 
+        Camera.main.WorldToViewportPoint(transform.position).x > 0 && 
+        Camera.main.WorldToViewportPoint(transform.position).x < 1 && 
+        Camera.main.WorldToViewportPoint(transform.position).y > 0 && 
+        Camera.main.WorldToViewportPoint(transform.position).y < 1;
+    #endregion
+
     public override void Initialize()
     {
         base.Initialize();
+        EnemyManager.Instance.CollectEnemyEvent += CollectEntity;
+    }
+    public override void OnDisable()
+    {
+        base.OnDisable();
+        EnemyManager.Instance.CollectEnemyEvent -= CollectEntity;
     }
     protected override void Move()
     {

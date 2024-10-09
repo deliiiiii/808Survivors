@@ -48,10 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cacc9f7be9825dc44802f8c310247484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyDistance: 0
-  destroyType: 1
-  flySpeed: 10
-  damage: 10
+  substanceData: {fileID: 0}
 --- !u!114 &6615789112708649317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,7 +194,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1788168565009067459}
-  - component: {fileID: 7237280880392364689}
+  - component: {fileID: 8867708842817507788}
   m_Layer: 0
   m_Name: Weapon
   m_TagString: Untagged
@@ -221,7 +218,7 @@ Transform:
   - {fileID: 7473299328391317496}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7237280880392364689
+--- !u!114 &8867708842817507788
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -230,10 +227,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7126996395088753388}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b0f936016dda13438f029d33e0a115b, type: 3}
+  m_Script: {fileID: 11500000, guid: 1163f0d3fb4ef934ebc0543a62d98996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyDistance: 0
-  destroyType: 0
-  fireCoolDown: 0.5
-  lastFireTime: 0

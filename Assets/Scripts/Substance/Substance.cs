@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "SubstanceData", menuName = "ScriptableObjects/SubstanceData")]
+//[CreateAssetMenu(fileName = "SubstanceData", menuName = "ScriptableObjects/SubstanceData")]
 [Serializable]
 public class SubstanceData:ScriptableObject
 {
